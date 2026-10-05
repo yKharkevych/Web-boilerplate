@@ -1,0 +1,147 @@
+@include mobile {
+  .header {
+    padding-top: 20px;
+  }
+
+  .upper-part {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .logo {
+    text-align: center;
+  }
+
+  .logo h1 {
+    font-size: 40px;
+  }
+
+  .search-form {
+    margin-top: 16px;
+  }
+
+  .search-input,
+  .search-form:hover .search-input,
+  .search-form:focus-within .search-input {
+    flex: 1;
+    width: auto;
+  }
+
+  .search-button {
+    flex: 0 0 94px;
+    margin-left: 10px;
+  }
+
+  .lower-part {
+    flex-direction: column;
+    margin-top: 24px;
+  }
+
+  .navigation {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 24px;
+    margin-bottom: 20px;
+  }
+
+  .nav-link,
+  .footer .nav-link {
+    margin-right: 0;
+    font-size: 20px;
+  }
+
+  .add-teacher-wrapper {
+    width: 100%;
+  }
+
+  .btn-outline {
+    width: 100%;
+  }
+
+  .section {
+    padding-top: 28px;
+  }
+
+  .section-title {
+    font-size: 32px;
+  }
+
+  .filters {
+    flex-wrap: wrap;
+    gap: 12px 0;
+    margin-top: 24px;
+  }
+
+  .filter,
+  .filter:first-child {
+    padding: 0 12px 0 0;
+    border-left: 0;
+  }
+
+  .teachers-grid {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 32px;
+    margin-top: 28px;
+  }
+
+  .table-wrapper {
+    margin-top: 28px;
+  }
+
+  .carousel-arrow {
+    top: 62px;
+  }
+
+  .carousel-arrow-prev {
+    left: -16px;
+  }
+
+  .carousel-arrow-next {
+    right: -16px;
+  }
+
+  .favorites-list {
+    padding: 0 24px;
+  }
+
+  .favorites-list .teacher-card {
+    flex-basis: 150px;
+  }
+
+  .section-about {
+    padding-top: 28px;
+  }
+
+  .footer {
+    flex-direction: column;
+    padding: 24px 0 24px;
+  }
+
+  .footer .navigation {
+    margin-bottom: 20px;
+  }
+
+  .popup-overlay {
+    padding: 8px;
+  }
+
+  .add-form {
+    padding: 20px 16px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-photo {
+    float: none;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    margin: 0 auto 16px;
+  }
+
+  .info-name {
+    font-size: 30px;
+  }
+}

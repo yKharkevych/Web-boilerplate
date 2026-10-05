@@ -1,0 +1,96 @@
+.table-wrapper {
+  margin-top: 35px;
+  overflow-x: auto;
+}
+
+.stats-table {
+  width: 100%;
+  min-width: 600px;
+  font-size: 16px;
+  color: $color-text;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  th,
+  td {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  th {
+    height: 52px;
+    padding-top: 4px;
+    font-size: 20px;
+    font-weight: 400;
+    color: $color-text;
+    border-bottom: 1px solid $color-line;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: #fafafa;
+      border-bottom: 5px solid $color-line;
+
+      &::after {
+        content: '\2193';
+        margin-left: 14px;
+        font-family: $font-head;
+        font-size: 22px;
+        font-weight: 400;
+        color: #1aa59f;
+      }
+    }
+  }
+
+  td {
+    height: 36px;
+    padding: 0;
+    white-space: nowrap;
+  }
+
+  th:nth-child(1) { width: 23%; }
+  th:nth-child(2) { width: 23.4%; }
+  th:nth-child(3) { width: 13.4%; }
+  th:nth-child(4) { width: 17.8%; }
+  th:nth-child(5) { width: 22.4%; }
+
+  th:first-child {
+    padding-left: 32px;
+    text-align: left;
+  }
+
+  td:first-child {
+    padding-left: 20px;
+    text-align: left;
+  }
+
+  tbody tr:nth-child(even) {
+    background: $color-zebra;
+  }
+}
+
+.pagination {
+  margin-top: 33px;
+  padding-left: 19px;
+  overflow: hidden;
+  text-align: left;
+}
+
+.page-link,
+.page-dots {
+  float: left;
+  margin-right: 20px;
+  line-height: 20px;
+}
+
+.page-link {
+  color: $color-link;
+
+  &.current {
+    color: $color-text;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
