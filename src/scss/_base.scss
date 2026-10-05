@@ -1,0 +1,116 @@
+html {
+  background: $color-bg;
+}
+
+body {
+  margin: 0;
+  font-family: $font-body;
+  font-size: 16px;
+  color: $color-text;
+  text-align: left;
+  background: $color-bg;
+}
+
+.page {
+  max-width: $page-width;
+  margin: 0 auto;
+  padding: 0 $page-padding;
+  background: $color-page;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.23);
+
+  @include tablet {
+    padding: 0 40px;
+  }
+
+  @include mobile {
+    padding: 0 16px;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+p {
+  margin: 0;
+}
+
+.btn {
+  display: inline-block;
+  font-family: $font-head;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-outline {
+  width: 171px;
+  height: 53px;
+  padding: 0;
+  font-size: 24px;
+  color: $color-accent;
+  background: $color-page;
+  border: 1px solid $color-accent;
+
+  &:hover,
+  &:focus-visible {
+    color: $color-page;
+    background: $color-accent;
+  }
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+}
+
+.nav-link {
+  margin-right: 39px;
+  font-family: $font-head;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+  color: $color-accent;
+  transition: color 0.2s;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: $color-accent-hover;
+  }
+}
+
+.section {
+  position: relative;
+  padding-top: 40px;
+  text-align: center;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 500px;
+    max-width: 100%;
+    height: 1px;
+    margin: 0 auto 27px;
+    background: $color-line;
+  }
+}
+
+.section-title {
+  margin: 0;
+  font-family: $font-head;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: $color-text;
+}

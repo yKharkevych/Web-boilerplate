@@ -1,0 +1,147 @@
+.filters {
+  display: flex;
+  align-items: center;
+  margin-top: 38px;
+  text-align: left;
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 19px;
+  border-left: 2px dotted #999;
+
+  &:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+.filter-label {
+  margin-right: 17px;
+  color: $color-gray;
+}
+
+.select {
+  height: 36px;
+  padding: 0 4px;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  color: #000;
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: 3px;
+
+  &#filter-age { width: 77px; }
+  &#filter-region { width: 92px; }
+  &#filter-sex { width: 87px; }
+}
+
+.filter-check {
+  padding-right: 32px;
+}
+
+.check-label {
+  display: flex;
+  align-items: center;
+  color: $color-gray;
+  cursor: pointer;
+
+  input {
+    margin: 0 8px 0 5px;
+  }
+
+  &:hover {
+    color: $color-text;
+  }
+}
+
+.teachers-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  row-gap: 41px;
+  margin: 60px 0 21px;
+  padding: 0;
+  list-style: none;
+
+  @include tablet {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+.teacher-card {
+  position: relative;
+  text-align: center;
+}
+
+.avatar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $avatar-size;
+  height: $avatar-size;
+  margin: 0 auto;
+  overflow: hidden;
+  font-family: $font-head;
+  font-size: 30px;
+  font-weight: 600;
+  color: $color-accent;
+  background: #fff;
+  border: 4px solid $color-ring;
+  border-radius: 50%;
+  transition: border-color 0.2s, color 0.2s;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &:hover {
+    color: $color-accent-hover;
+    border-color: $color-ring-hover;
+  }
+}
+
+.is-favorite::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 41px;
+  height: 39px;
+  margin-left: 43px;
+  background: $color-star;
+  @include star-shape;
+  pointer-events: none;
+}
+
+.teacher-name {
+  margin: 20px 0 0;
+  font-family: $font-head;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 30px;
+  color: $color-text;
+
+  span {
+    display: block;
+  }
+}
+
+.teacher-subject {
+  margin-top: 10px;
+  font-size: 16px;
+  line-height: 20px;
+  color: $color-gray;
+}
+
+.teacher-country {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 14px;
+  color: #000;
+}

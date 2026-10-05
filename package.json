@@ -6,7 +6,9 @@
     "start": "node express.js",
     "build": "rm -f build && cross-env NODE_ENV=production webpack --progress",
     "lint": "eslint src/js",
-    "stylelint": "stylelint src/css"
+    "stylelint": "stylelint src/css",
+    "sass": "sass --no-source-map src/scss/style.scss src/css/style.css",
+    "sass:watch": "sass --no-source-map --watch src/scss/style.scss src/css/style.css"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
