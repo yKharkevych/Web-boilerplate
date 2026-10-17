@@ -1,3 +1,5 @@
+import './teachers.js';
+
 const addPopup = document.getElementById('popup-add-teacher');
 const infoPopup = document.getElementById('popup-teacher-info');
 const popups = [addPopup, infoPopup];
