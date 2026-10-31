@@ -1,6 +1,6 @@
 import { randomUserMock } from '../mock.js';
 import {additionalUsers} from '../mock.js';
-import readline from 'readline';
+//import readline from 'readline';
 
 
 // завдання 1
@@ -23,7 +23,7 @@ const random_user_mock = randomUserMock.map((user) =>{
         age: user.dob.age,
         phone: user.phone,
         picture_large: user.picture.large,
-        picture_tumbnail: user.picture.thumbnail,
+        picture_thumbnail: user.picture.thumbnail,
         course: courses[Math.floor(Math.random() * courses.length)],
         favorite: false,
         bg_color: null,
@@ -57,7 +57,7 @@ const additional_users = additionalUsers.map((user) =>{
 });
 
 const combinedUsers = [...random_user_mock, ...additional_users];
-const uniqueUsers = combinedUsers.filter((user, index, array) => {
+export const uniqueUsers = combinedUsers.filter((user, index, array) => {
   return array.findIndex((u) => u.email === user.email) === index;
 });
 
@@ -105,18 +105,40 @@ function validateUser(user) {
 }
 
 // завдання 3
-function filterUsers(users, filters){
-  return users.filter((user) => {
-    const matchCountry = filters.country ? user.country === filters.country : true;
-    const matchAge = filters.age !== undefined ? user.age === filters.age : true;
-    const matchGender = filters.gender ? user.gender === filters.gender : true;
-    const matchFavorite = filters.favorite !== undefined ? user.favorite === filters.favorite : true;
-    return matchCountry && matchAge && matchGender && matchFavorite;
-  })
+export function filterUsers(users, filters, favorites) {
+    return users.filter(user => {
+        const matchCountry = !filters.country ||
+            user.country === filters.country;
+
+        let matchAge = true;
+
+        if (filters.age === '18-31') {
+            matchAge = user.age >= 18 && user.age <= 31;
+        } else if (filters.age === '32-45') {
+            matchAge = user.age >= 32 && user.age <= 45;
+        } else if (filters.age === '46+') {
+            matchAge = user.age >= 46;
+        }
+
+        const matchGender = !filters.gender ||
+            user.gender?.toLowerCase() === filters.gender;
+
+        const matchFavorite = !filters.favorite ||
+            favorites.has(user.email);
+
+        const matchPhoto = !filters.photo ||
+            Boolean(user.picture_large);
+
+        return matchCountry &&
+               matchAge &&
+               matchGender &&
+               matchFavorite &&
+               matchPhoto;
+    });
 }
 
 // завдання 4
-function sortUsers(users, sortBy, order = 'asc') {
+export function sortUsers(users, sortBy, order = 'asc') {
   return users.toSorted((a, b) => {
     if(typeof a [sortBy] === 'number'){
       return order === 'asc' ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy];
@@ -129,7 +151,7 @@ function sortUsers(users, sortBy, order = 'asc') {
 }
 
 // завдання 5
-function searchUsers(users, searchCategory, searchValue) {
+export function searchUsers(users, searchCategory, searchValue) {
   return users.filter((user) => {
     const value = user[searchCategory];
     if (typeof value === 'string') {
@@ -151,10 +173,10 @@ function getSearchPercentage(users, predicate) {
 }
 
 // тестування функцій
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+///const rl = readline.createInterface({
+///  input: process.stdin,
+///  output: process.stdout
+///});
 
 function showMenu() {
   console.log('\n--- SELECT AN ACTION ---');
@@ -190,7 +212,7 @@ function showMenu() {
       case '3':
         rl.question('Enter country to filter by (or leave blank): ', (country) => {
           rl.question('Enter age to filter by (or leave blank): ', (ageInput) => {
-            r1l.question('Enter gender to filter by (or leave blank): ', (gender) => {
+            rl.question('Enter gender to filter by (or leave blank): ', (gender) => {
               rl.question('Enter favorite status to filter by (true/false or leave blank): ', (favoriteInput) => {
                 const filters = {
                   country: country || undefined,
@@ -247,4 +269,4 @@ function showMenu() {
   });
 }
 
-showMenu();
+//showMenu();
