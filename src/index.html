@@ -52,37 +52,43 @@
 
         <form class="filters" action="#">
           <div class="filter">
-            <label class="filter-label" for="filter-age">Age</label>
-            <select class="select" id="filter-age" name="age">
-              <option>18-31</option>
-              <option>32-45</option>
-              <option>46+</option>
-            </select>
+              <label class="filter-label" for="filter-age">Age</label>
+              <select class="select" id="filter-age" name="age">
+                  <option value="">All ages</option>
+                  <option value="18-31">18-31</option>
+                  <option value="32-45">32-45</option>
+                  <option value="46+">46+</option>
+              </select>
           </div>
+
           <div class="filter">
-            <label class="filter-label" for="filter-region">Region</label>
-            <select class="select" id="filter-region" name="region">
-              <option>Europe</option>
-              <option>Asia</option>
-              <option>America</option>
-            </select>
+              <label class="filter-label" for="filter-country">Country</label>
+              <select class="select" id="filter-country" name="country">
+                  <option value="">All countries</option>
+              </select>
           </div>
+
           <div class="filter">
-            <label class="filter-label" for="filter-sex">Sex</label>
-            <select class="select" id="filter-sex" name="sex">
-              <option>Male</option>
-              <option>Female</option>
-            </select>
+              <label class="filter-label" for="filter-sex">Sex</label>
+              <select class="select" id="filter-sex" name="sex">
+                  <option value="">All genders</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+              </select>
           </div>
+
           <div class="filter filter-check">
-            <label class="check-label">
-              <input type="checkbox" name="only-photo"> Only with photo
-            </label>
+              <label class="check-label">
+                  <input type="checkbox" name="only-photo">
+                  Only with photo
+              </label>
           </div>
+
           <div class="filter filter-check">
-            <label class="check-label">
-              <input type="checkbox" name="only-favorites"> Only favorites
-            </label>
+              <label class="check-label">
+                  <input type="checkbox" name="only-favorites">
+                  Only favorites
+              </label>
           </div>
         </form>
 
@@ -146,11 +152,11 @@
           <table class="stats-table">
             <thead>
               <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Speciality</th>
-                <th scope="col">Age</th>
-                <th scope="col">Gender</th>
-                <th scope="col">Nationality</th>
+                  <th scope="col" data-sort="full_name">Name</th>
+                  <th scope="col" data-sort="course">Speciality</th>
+                  <th scope="col" data-sort="age">Age</th>
+                  <th scope="col" data-sort="gender">Gender</th>
+                  <th scope="col" data-sort="country">Nationality</th>
               </tr>
             </thead>
             <tbody>
@@ -248,49 +254,42 @@
       <form class="popup-body add-form" action="#">
         <div class="form-row">
           <label class="form-label" for="f-name">Name</label>
-          <input class="form-control" type="text" id="f-name" name="name" placeholder="Enter name">
+          <input class="form-control" type="text" id="f-name" name="name" placeholder="Enter name" required>
         </div>
         <div class="form-row">
           <label class="form-label" for="f-speciality">Speciality</label>
           <select class="form-control" id="f-speciality" name="speciality">
-            <option>Mathematics</option>
-            <option>Chemistry</option>
-            <option>Chess</option>
-            <option>Physics</option>
-            <option>Biology</option>
+            <option value="">Select speciality</option>
           </select>
         </div>
         <div class="form-grid">
           <div class="form-row">
             <label class="form-label" for="f-country">Country</label>
             <select class="form-control" id="f-country" name="country">
-              <option>Ukraine</option>
-              <option>Poland</option>
-              <option>Belgium</option>
-              <option>India</option>
+              <option value="">Select country</option>
             </select>
           </div>
           <div class="form-row">
             <label class="form-label" for="f-city">City</label>
-            <input class="form-control" type="text" id="f-city" name="city">
+            <input class="form-control" type="text" id="f-city" name="city" required>
           </div>
           <div class="form-row">
             <label class="form-label" for="f-email">Email</label>
-            <input class="form-control" type="email" id="f-email" name="email">
+            <input class="form-control" type="email" id="f-email" name="email" required>
           </div>
           <div class="form-row">
             <label class="form-label" for="f-phone">Phone</label>
-            <input class="form-control" type="tel" id="f-phone" name="phone">
+            <input class="form-control" type="tel" id="f-phone" name="phone" required>
           </div>
           <div class="form-row">
             <label class="form-label" for="f-dob">Date of birth</label>
-            <input class="form-control form-control-date" type="date" id="f-dob" name="dob">
+            <input class="form-control form-control-date" type="date" id="f-dob" name="dob" required>
           </div>
         </div>
         <div class="form-inline">
           <span class="form-label form-label-inline">Sex</span>
-          <label class="radio-label">Male <input type="radio" name="sex" value="male"></label>
-          <label class="radio-label">Female <input type="radio" name="sex" value="female"></label>
+          <label class="radio-label">Male <input type="radio" name="sex" value="male" required></label>
+          <label class="radio-label">Female <input type="radio" name="sex" value="female" required></label>
         </div>
         <div class="form-inline form-inline-color">
           <label class="form-label form-label-inline" for="f-color">Background color</label>
@@ -336,7 +335,7 @@
     </div>
   </div>
 
-  <script type="text/javascript" src="./js/app.js"></script>
+  <script type="module" src="./js/app.js"></script>
 </body>
 
 </html>
