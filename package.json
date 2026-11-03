@@ -8,7 +8,8 @@
     "lint": "eslint src/js",
     "stylelint": "stylelint src/css",
     "sass": "sass --no-source-map src/scss/style.scss src/css/style.css",
-    "sass:watch": "sass --no-source-map --watch src/scss/style.scss src/css/style.css"
+    "sass:watch": "sass --no-source-map --watch src/scss/style.scss src/css/style.css",
+    "server:api": "json-server db.json --port 3002"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
@@ -28,6 +29,7 @@
     "html-replace-webpack-plugin": "^2.5.6",
     "html-webpack-plugin": "^4.3.0",
     "imagemin-webpack-plugin": "^2.4.2",
+    "json-server": "^1.0.0-beta.15",
     "mini-css-extract-plugin": "^0.9.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "postcss-import": "^12.0.1",

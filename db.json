@@ -1,0 +1,27 @@
+{
+  "teachers": [
+    {
+      "id": "mZ0guHgkCEk",
+      "full_name": "Teacher",
+      "course": "Art",
+      "country": "Australia",
+      "city": "Kyiv",
+      "email": "email@gmail.com",
+      "phone": "0992223344",
+      "b_date": "2001-11-11",
+      "age": 24,
+      "gender": "male",
+      "bg_color": "#000000",
+      "note": null,
+      "title": null,
+      "state": null,
+      "postcode": null,
+      "coordinates": null,
+      "timezone": null,
+      "picture_large": null,
+      "picture_thumbnail": null,
+      "favorite": false
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
