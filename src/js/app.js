@@ -1,11 +1,11 @@
-import { uniqueUsers, filterUsers, sortUsers, searchUsers } from './teachers.js';
+import { filterUsers, sortUsers, searchUsers } from './teachers.js';
 import { renderTeachers, renderFavorites, renderTeacherInfo, renderStatistics } from './render.js';
+import { fetchUsers, addTeacher, fetchSavedTeachers } from './api.js';
 
-const favorites = new Set(
-    uniqueUsers
-        .filter(teacher => teacher.favorite)
-        .map(teacher => teacher.email)
-);
+let uniqueUsers = [];
+let visibleUsers = [];
+
+const favorites = new Set();
 let selectedTeacher = null;
 
 const filtersForm = document.querySelector('.filters');
@@ -31,9 +31,7 @@ const searchInput = document.querySelector('#search');
 
 const addTeacherForm = document.querySelector('.add-form');
 
-renderTeachers(uniqueUsers, favorites);
-renderFavorites(uniqueUsers, favorites);
-renderStatistics(uniqueUsers);
+const loadMoreButton = document.querySelector('#load-more-btn');
 
 const addPopup = document.getElementById('popup-add-teacher');
 const infoPopup = document.getElementById('popup-teacher-info');
@@ -107,24 +105,6 @@ favoriteButton.addEventListener('click', () => {
     );
 });
 
-function populateCountries() {
-    const countries = [...new Set(
-        uniqueUsers
-            .map(teacher => teacher.country)
-            .filter(Boolean)
-    )].sort();
-
-    countries.forEach(country => {
-        const option = document.createElement('option');
-
-        option.value = country;
-        option.textContent = country;
-
-        countryFilter.append(option);
-    });
-}
-populateCountries();
-
 function populateSelect(selector, property) {
     const select = document.querySelector(selector);
 
@@ -145,8 +125,13 @@ function populateSelect(selector, property) {
     });
 }
 
-populateSelect('#f-country', 'country');
-populateSelect('#f-speciality', 'course');
+function updateStatistics() {
+    const sortedUsers = currentSortField
+        ? sortUsers(visibleUsers, currentSortField, currentSortOrder)
+        : visibleUsers;
+
+    renderStatistics(sortedUsers);
+}
 
 function applyFilters() {
     const filters = {
@@ -157,11 +142,15 @@ function applyFilters() {
         photo: photoFilter.checked
     };
 
-    const filteredTeachers = filterUsers(uniqueUsers, filters, favorites);
+    visibleUsers = filterUsers(uniqueUsers, filters, favorites);
 
-    renderTeachers(filteredTeachers, favorites);
+    renderTeachers(visibleUsers, favorites);
+    updateStatistics();
 }
-filtersForm.addEventListener('change', applyFilters);
+filtersForm.addEventListener('change', () => {
+    searchInput.value = '';
+    applyFilters();
+});
 filtersForm.addEventListener('submit', event => {
     event.preventDefault();
 });
@@ -189,9 +178,7 @@ statisticsTable.querySelector('thead').addEventListener('click', event => {
         currentSortOrder = 'asc';
     }
 
-    const sortedTeachers = sortUsers(uniqueUsers, currentSortField, currentSortOrder);
-
-    renderStatistics(sortedTeachers);
+    updateStatistics();
 
     statisticsTable.querySelectorAll('th[data-sort]').forEach(th => {
         th.setAttribute(
@@ -207,6 +194,7 @@ statisticsTable.querySelector('thead').addEventListener('click', event => {
 
 searchForm.addEventListener('submit', event => {
     event.preventDefault();
+    filtersForm.reset();
 
     const searchValue = searchInput.value.trim();
 
@@ -219,11 +207,12 @@ searchForm.addEventListener('submit', event => {
     const noteResults = searchUsers(uniqueUsers, 'note', searchValue);
     const ageResults = searchUsers(uniqueUsers, 'age', searchValue);
 
-    const searchResults = [
+    visibleUsers = [
         ...new Set([...nameResults, ...noteResults, ...ageResults])
     ];
 
-    renderTeachers(searchResults, favorites);
+    renderTeachers(visibleUsers, favorites);
+    updateStatistics();
 });
 
 function calculateAge(birthDate) {
@@ -314,11 +303,11 @@ function validateNewTeacher(teacher) {
     return null;
 }
 
-addTeacherForm.addEventListener('submit', event => {
+
+addTeacherForm.addEventListener('submit', async event => {
     event.preventDefault();
 
     const teacher = getTeacherFromForm(addTeacherForm);
-
     const error = validateNewTeacher(teacher);
 
     if (error) {
@@ -326,41 +315,80 @@ addTeacherForm.addEventListener('submit', event => {
         return;
     }
 
-    uniqueUsers.push(teacher);
-    populateSelect('#f-country', 'country');
-    populateSelect('#f-speciality', 'course');
+    try {
+        const savedTeacher = await addTeacher(teacher);
 
-    const countryExists = [...countryFilter.options].some(
-        option => option.value === teacher.country
-    );
+        uniqueUsers.push(savedTeacher);
 
-    if (!countryExists) {
-        const option = document.createElement('option');
-        option.value = teacher.country;
-        option.textContent = teacher.country;
-        countryFilter.append(option);
+        populateSelect('#f-country', 'country');
+        populateSelect('#f-speciality', 'course');
+        populateSelect('#filter-country', 'country');
+
+        filtersForm.reset();
+        searchInput.value = '';
+
+        visibleUsers = uniqueUsers;
+
+        renderTeachers(visibleUsers, favorites);
+        renderFavorites(uniqueUsers, favorites);
+        updateStatistics();
+
+        addTeacherForm.reset();
+        closePopups();
+
+    } catch (error) {
+        console.error('Error saving teacher:', error);
+        alert('Failed to save teacher. Please try again.');
     }
-
-    filtersForm.reset();
-
-    const searchInput = document.querySelector('#search');
-    searchInput.value = '';
-
-    renderTeachers(uniqueUsers, favorites);
-    renderFavorites(uniqueUsers, favorites);
-
-    if (currentSortField) {
-        const sortedTeachers = sortUsers(
-            uniqueUsers,
-            currentSortField,
-            currentSortOrder
-        );
-
-        renderStatistics(sortedTeachers);
-    } else {
-        renderStatistics(uniqueUsers);
-    }
-
-    addTeacherForm.reset();
-    closePopups();
 });
+
+
+async function init() {
+    try {
+        const randomUsers = await fetchUsers(50);
+        const savedTeachers = await fetchSavedTeachers();
+
+        uniqueUsers = [...randomUsers, ...savedTeachers];
+        visibleUsers = uniqueUsers;
+
+        populateSelect('#filter-country', 'country');
+        populateSelect('#f-country', 'country');
+        populateSelect('#f-speciality', 'course');
+
+        renderTeachers(uniqueUsers, favorites);
+        renderFavorites(uniqueUsers, favorites);
+        renderStatistics(uniqueUsers);
+
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+}
+init();
+
+async function loadMoreUsers() {
+    try {
+        const newUsers = await fetchUsers(10);
+        uniqueUsers.push(...newUsers);
+
+        filtersForm.reset();
+        searchInput.value = '';
+
+        populateSelect('#filter-country', 'country');
+        populateSelect('#f-country', 'country');
+        populateSelect('#f-speciality', 'course');
+
+        visibleUsers = uniqueUsers;
+
+        renderTeachers(uniqueUsers, favorites);
+        renderFavorites(uniqueUsers, favorites);
+        renderStatistics(uniqueUsers);
+        
+    } catch (error) {
+        console.error('Error loading more users:', error);
+    } finally {
+        loadMoreButton.disabled = false;
+        loadMoreButton.textContent = 'Load More';
+    }
+}
+
+loadMoreButton.addEventListener('click', loadMoreUsers);
