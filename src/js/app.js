@@ -1,12 +1,18 @@
 import { filterUsers, sortUsers, searchUsers } from './teachers.js';
 import { renderTeachers, renderFavorites, renderTeacherInfo, renderStatistics } from './render.js';
 import { fetchUsers, addTeacher, fetchSavedTeachers } from './api.js';
+import { renderTeachersReport } from './reports.js';
 
 let uniqueUsers = [];
 let visibleUsers = [];
 
 const favorites = new Set();
 let selectedTeacher = null;
+
+let teacherMap = null;
+let teacherMarker = null;
+
+let teachersChart = null;
 
 const filtersForm = document.querySelector('.filters');
 const ageFilter = document.querySelector('#filter-age');
@@ -24,14 +30,22 @@ const photoFilter = document.querySelector(
 let currentSortField = null;
 let currentSortOrder = 'asc';
 
-const statisticsTable = document.querySelector('.stats-table');
-
 const searchForm = document.querySelector('.search-form');
 const searchInput = document.querySelector('#search');
 
 const addTeacherForm = document.querySelector('.add-form');
 
 const loadMoreButton = document.querySelector('#load-more-btn');
+
+const toggleMap = document.querySelector('.toggle-map');
+const mapContainer = document.querySelector('#teacher-map');
+
+const chartCriterion = document.querySelector('#chart-criterion');
+
+const statisticsMode = document.querySelector('#statistics-mode');
+const reportCriterion = document.querySelector('#report-criterion');
+const chartView = document.querySelector('#statistics-chart-view');
+const reportView = document.querySelector('#statistics-report-view');
 
 const addPopup = document.getElementById('popup-add-teacher');
 const infoPopup = document.getElementById('popup-teacher-info');
@@ -64,6 +78,7 @@ function handleTeacherClick(event) {
 
     selectedTeacher = teacher;
 
+    mapContainer.hidden = true;
     renderTeacherInfo(teacher);
 
     favoriteButton.setAttribute(
@@ -126,11 +141,11 @@ function populateSelect(selector, property) {
 }
 
 function updateStatistics() {
-    const sortedUsers = currentSortField
-        ? sortUsers(visibleUsers, currentSortField, currentSortOrder)
-        : visibleUsers;
-
-    renderStatistics(sortedUsers);
+    if (statisticsMode.value === 'chart') {
+        renderChart();
+    } else {
+        renderTeachersReport(uniqueUsers, reportCriterion.value);
+    }
 }
 
 function applyFilters() {
@@ -161,35 +176,6 @@ popups.forEach((popup) => {
       closePopups();
     }
   });
-});
-
-statisticsTable.querySelector('thead').addEventListener('click', event => {
-    const header = event.target.closest('th[data-sort]');
-
-    if (!header) return;
-
-    const sortField = header.dataset.sort;
-
-    if (currentSortField === sortField) {
-        currentSortOrder =
-            currentSortOrder === 'asc' ? 'desc' : 'asc';
-    } else {
-        currentSortField = sortField;
-        currentSortOrder = 'asc';
-    }
-
-    updateStatistics();
-
-    statisticsTable.querySelectorAll('th[data-sort]').forEach(th => {
-        th.setAttribute(
-            'aria-sort',
-            th === header
-                ? (currentSortOrder === 'asc'
-                    ? 'ascending'
-                    : 'descending')
-                : 'none'
-        );
-    });
 });
 
 searchForm.addEventListener('submit', event => {
@@ -241,11 +227,11 @@ function getTeacherFromForm(form) {
 
     return {
         id: crypto.randomUUID(),
-        full_name: formData.get('name').trim(),
+        full_name: _.trim(formData.get('name') ?? ''),
         course: formData.get('speciality'),
         country: formData.get('country'),
         city: formData.get('city').trim(),
-        email: formData.get('email').trim().toLowerCase(),
+        email: _.toLower(_.trim(formData.get('email') ?? '')),
         phone: formData.get('phone').trim(),
         b_date: birthDate,
         age: calculateAge(birthDate),
@@ -265,7 +251,7 @@ function getTeacherFromForm(form) {
 }
 
 function validateNewTeacher(teacher) {
-    if (!teacher.full_name) {
+    if (_.isEmpty(_.trim(teacher.full_name ?? ''))) {
         return 'Enter teacher name';
     }
 
@@ -273,8 +259,8 @@ function validateNewTeacher(teacher) {
         return 'Enter a valid email';
     }
 
-    const emailExists = uniqueUsers.some(user =>
-        user.email?.toLowerCase() === teacher.email
+    const emailExists = _.some(uniqueUsers, user =>
+        _.toLower(user.email ?? '') === _.toLower(teacher.email ?? '')
     );
 
     if (emailExists) {
@@ -357,7 +343,7 @@ async function init() {
 
         renderTeachers(uniqueUsers, favorites);
         renderFavorites(uniqueUsers, favorites);
-        renderStatistics(uniqueUsers);
+        updateStatistics();
 
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -381,7 +367,7 @@ async function loadMoreUsers() {
 
         renderTeachers(uniqueUsers, favorites);
         renderFavorites(uniqueUsers, favorites);
-        renderStatistics(uniqueUsers);
+        updateStatistics();
         
     } catch (error) {
         console.error('Error loading more users:', error);
@@ -392,3 +378,122 @@ async function loadMoreUsers() {
 }
 
 loadMoreButton.addEventListener('click', loadMoreUsers);
+
+function showTeacherMap() {
+    if (!selectedTeacher?.coordinates) {
+        return;
+    }
+
+    const latitude = Number(selectedTeacher.coordinates?.latitude);
+    const longitude = Number(selectedTeacher.coordinates?.longitude);
+
+    if(latitude> 90 || latitude < -90 || longitude > 180 || longitude < -180 || !Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+        alert('Invalid coordinates for this teacher.');
+        return;
+    }
+
+    if (!teacherMap) {
+        teacherMap = L.map('teacher-map').setView([latitude, longitude], 5);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(teacherMap);
+        teacherMarker = L.marker([latitude, longitude]).addTo(teacherMap);
+    } else{
+        teacherMap.setView([latitude, longitude], 5);
+        teacherMarker.setLatLng([latitude, longitude]);
+    }
+}
+
+toggleMap.addEventListener('click', event => {
+    event.preventDefault();
+
+    if(!selectedTeacher?.coordinates) {
+        alert('No coordinates available for this teacher.');
+        return;
+    }
+
+    mapContainer.hidden = !mapContainer.hidden;
+    if (!mapContainer.hidden) {
+        showTeacherMap();
+        if (teacherMap) teacherMap.invalidateSize();
+    }
+});
+
+
+function getChartData(teachers, criterion) {
+    const counts = {};
+
+    teachers.forEach(teacher => {
+        let value = teacher[criterion];
+
+        if (criterion === 'age') {
+            const age = Number(teacher.age);
+
+            if (!Number.isFinite(age) || age < 18) {
+                return;
+            }
+
+            if (age <= 31) {
+                value = '18-31';
+            } else if (age <= 45) {
+                value = '32-45';
+            } else {
+                value = '46+';
+            }
+        }
+
+        if (value) {
+            counts[value] = (counts[value] || 0) + 1;
+        }
+    });
+
+    return {
+        labels: Object.keys(counts),
+        values: Object.values(counts)
+    };
+}
+
+
+function renderChart() {
+    const criterion = document.querySelector('#chart-criterion').value;
+    const canvas = document.querySelector('#teachers-chart');
+
+    const chartData = getChartData(visibleUsers, criterion);
+
+    if (teachersChart) {
+        teachersChart.destroy();
+    }
+
+    teachersChart = new Chart(canvas, {
+        type: 'pie',
+        data: {
+            labels: chartData.labels,
+            datasets: [{
+                data: chartData.values
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+}
+
+chartCriterion.addEventListener('change', () => {
+    renderChart();
+});
+
+statisticsMode.addEventListener('change', () => {
+    const showChart = statisticsMode.value === 'chart';
+
+    chartView.hidden = !showChart;
+    reportView.hidden = showChart;
+
+    updateStatistics();
+});
+
+reportCriterion.addEventListener('change', () => {
+    if (statisticsMode.value === 'reports') {
+        renderTeachersReport(uniqueUsers, reportCriterion.value);
+    }
+});

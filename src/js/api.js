@@ -10,8 +10,8 @@ export async function fetchUsers(count = 50) {
     }
 
     const data = await response.json();
-    const users = data.results.map((user) => {
-        return{
+    const users = _.map(data.results, (user) => {
+            return{
             id: user.login.uuid,
             gender: user.gender,
             title: user.name.title,

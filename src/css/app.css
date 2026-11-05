@@ -5,3 +5,11 @@
 @import url('./normalize.css');
 
 @import url('./style.css');
+
+.statistics-mode-controls,.report-controls{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:12px;padding:15px 0}
+.statistics-mode-controls .select,.report-controls .select{min-width:190px}
+.statistics-mode-controls{border-top:1px solid #e0e0e0;border-bottom:1px solid #e0e0e0;margin-top:25px}
+.report-controls{margin-top:12px}
+.report-summary{font-size:14px;color:#8a8a8a;margin-bottom:10px}
+#pivot-container{width:100%;min-height:480px;margin:12px 0 36px;border:1px solid #e0e0e0}
+#statistics-chart-view[hidden],#statistics-report-view[hidden]{display:none}

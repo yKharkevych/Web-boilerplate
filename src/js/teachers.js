@@ -106,7 +106,7 @@ function validateUser(user) {
 
 // завдання 3
 export function filterUsers(users, filters, favorites) {
-    return users.filter(user => {
+    return _.filter(users, user => {
         const matchCountry = !filters.country ||
             user.country === filters.country;
 
@@ -139,25 +139,29 @@ export function filterUsers(users, filters, favorites) {
 
 // завдання 4
 export function sortUsers(users, sortBy, order = 'asc') {
-  return users.toSorted((a, b) => {
-    if(typeof a [sortBy] === 'number'){
-      return order === 'asc' ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy];
-    } else {
-      const valueA = String(a[sortBy]).toLowerCase();
-      const valueB = String(b[sortBy]).toLowerCase();
-      return order === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
-    }
-  })
+  return _.orderBy(
+    users,
+      [user => {
+        const value = user[sortBy];
+          return typeof value === 'string'
+            ? value.toLowerCase()
+            : value ?? '';
+        }],
+    [order]
+  );
 }
 
 // завдання 5
 export function searchUsers(users, searchCategory, searchValue) {
-  return users.filter((user) => {
+  return _.filter(users, user => {
     const value = user[searchCategory];
     if (typeof value === 'string') {
-      return value.toLowerCase().includes(searchValue.toLowerCase());
+      return _.includes(
+        _.toLower(value),
+        _.toLower(String(searchValue))
+      );
     }
-    return value === parseInt(searchValue);
+    return value === parseInt(searchValue, 10);
   });
 }
 

@@ -21,6 +21,28 @@
       "picture_large": null,
       "picture_thumbnail": null,
       "favorite": false
+    },
+    {
+      "id": "MjMtmlw0ZgE",
+      "full_name": "name",
+      "course": "Biology",
+      "country": "Norway",
+      "city": "City",
+      "email": "name@gmail.com",
+      "phone": "0992223344",
+      "b_date": "2005-11-05",
+      "age": 21,
+      "gender": "female",
+      "bg_color": "#000000",
+      "note": null,
+      "title": null,
+      "state": null,
+      "postcode": null,
+      "coordinates": null,
+      "timezone": null,
+      "picture_large": null,
+      "picture_thumbnail": null,
+      "favorite": false
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
