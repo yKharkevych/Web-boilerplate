@@ -1,3 +1,5 @@
+import { getDaysUntilBirthday } from './dateUtils.js';
+
 function createTeacherCard(teacher, favorites) {
     const teacherCard = document.createElement('li');
     teacherCard.classList.add('teacher-card');
@@ -93,6 +95,18 @@ export function renderTeacherInfo(teacher) {
 
     paragraphs[3].textContent = teacher.phone || 'Not specified';
 
+    const birthdayElement = popup.querySelector('.info-birthday');
+    const daysUntilBirthday = getDaysUntilBirthday(teacher.b_date);
+
+    if (daysUntilBirthday === null) {
+        birthdayElement.textContent = 'Birthday: Unknown';
+    } else if (daysUntilBirthday === 0) {
+        birthdayElement.textContent = 'Birthday is today!';
+    } else {
+        birthdayElement.textContent = `Birthday in ${daysUntilBirthday} days`;
+    }
+
+    
     const note = popup.querySelector('.info-text');
     note.textContent = teacher.note || 'No additional information';
 }

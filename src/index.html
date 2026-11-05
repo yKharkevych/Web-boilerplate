@@ -14,7 +14,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gelasio:wght@700&family=PT+Sans:wght@400;700&family=Source+Sans+Pro:wght@400;600&display=swap">
   <link rel="stylesheet" href="./css/app.css">
-
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link
+    rel="stylesheet"
+    href="https://cdn.webdatarocks.com/latest/webdatarocks.min.css"
+  >
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -151,33 +155,45 @@
       </section>
 
       <!-- ===================== STATISTICS ===================== -->
+      
+<!-- ===================== STATISTICS ===================== -->
       <section class="section section-statistics" id="statistics">
         <h2 class="section-title">Statistics</h2>
 
-        <div class="table-wrapper">
-          <table class="stats-table">
-            <thead>
-              <tr>
-                  <th scope="col" data-sort="full_name">Name</th>
-                  <th scope="col" data-sort="course">Speciality</th>
-                  <th scope="col" data-sort="age">Age</th>
-                  <th scope="col" data-sort="gender">Gender</th>
-                  <th scope="col" data-sort="country">Nationality</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>Daisy Alexander</td><td>Chemistry</td><td>28</td><td>Female</td><td>Vietnam</td></tr>
-              <tr><td>Julia Bradley</td><td>Math</td><td>26</td><td>Female</td><td>USA</td></tr>
-              <tr><td>Rita Hart</td><td>Art</td><td>41</td><td>Female</td><td>Ireland</td></tr>
-              <tr><td>Jonathan Jacobs</td><td>Math</td><td>32</td><td>Male</td><td>England</td></tr>
-              <tr><td>Nathaniel White</td><td>Computer Science</td><td>37</td><td>Male</td><td>Austria</td></tr>
-              <tr><td>Frank Medina</td><td>English</td><td>43</td><td>Male</td><td>Italy</td></tr>
-              <tr><td>Ella Curtis</td><td>Chess</td><td>34</td><td>Female</td><td>USA</td></tr>
-              <tr><td>Claire Simmmons</td><td>Art</td><td>38</td><td>Female</td><td>Netherlands</td></tr>
-              <tr><td>Benjamin Knight</td><td>Biology</td><td>44</td><td>Male</td><td>Scotland</td></tr>
-              <tr><td>Norma Rose</td><td>Statistics</td><td>36</td><td>Female</td><td>France</td></tr>
-            </tbody>
-          </table>
+        <div class="statistics-mode-controls">
+          <label class="filter-label" for="statistics-mode">View</label>
+          <select class="select" id="statistics-mode">
+            <option value="chart">Charts</option>
+            <option value="reports">Reports</option>
+          </select>
+        </div>
+
+        <div id="statistics-chart-view">
+          <div class="chart-controls">
+            <div class="filter">
+              <label class="filter-label" for="chart-criterion">Group by</label>
+              <select class="select" id="chart-criterion">
+                <option value="country">Country</option>
+                <option value="course">Speciality</option>
+                <option value="age">Age group</option>
+              </select>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="teachers-chart"></canvas>
+          </div>
+        </div>
+
+        <div id="statistics-report-view" hidden>
+          <div class="report-controls">
+            <label class="filter-label" for="report-criterion">Report</label>
+            <select class="select" id="report-criterion">
+              <option value="country">Country report</option>
+              <option value="flat">All teachers (flat table)</option>
+            </select>
+          </div>
+          <p class="report-summary" id="report-summary" aria-live="polite"></p>
+          <div id="pivot-container"></div>
         </div>
       </section>
 
@@ -325,14 +341,22 @@
             <p>35, Male</p>
             <p><a class="info-email" href="mailto:ihor_tkachuk@domain.com">ihor_tkachuk@domain.com</a></p>
             <p>+380964993252</p>
+            <p class="info-birthday"></p>
           </div>
         </div>
         <p class="info-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab autem consectetur culpa cumque, distinctio dolor dolore dolorem doloremque ea explicabo facilis nam nesciunt nisi pariatur perspiciatis porro quis similique temporibus veniam veritatis? A ab ad, aliquam amet consequatur cupiditate debitis deserunt doloribus dolorum earum eius eos minus nostrum odit omnis perferendis...</p>
         <a href="#" class="toggle-map">toggle map</a>
+        <div class="map" id="teacher-map" hidden></div>
       </div>
     </div>
   </div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.18.1/lodash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+  <script src="https://cdn.webdatarocks.com/latest/webdatarocks.toolbar.min.js"></script>
+  <script src="https://cdn.webdatarocks.com/latest/webdatarocks.js"></script>
   <script type="module" src="./js/app.js"></script>
 </body>
 

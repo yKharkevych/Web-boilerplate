@@ -266,3 +266,34 @@
   border-bottom: 1px dashed currentColor;
   line-height: 16px;
 }
+
+#teacher-map {
+    width: 100%;
+    height: 300px;
+    margin-top: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.info-birthday {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    padding: 8px 12px;
+
+    border-left: 3px solid #e76f51;
+    background-color: #fff7f3;
+
+    color: #444;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+
+    &:empty {
+        display: none;
+    }
+}
