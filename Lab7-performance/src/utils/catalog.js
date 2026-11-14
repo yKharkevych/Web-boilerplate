@@ -33,6 +33,21 @@ export function applyFilters(list, filters) {
 }
 
 export function getVisibleTutors(list, { query, filters, sortBy }) {
-  const result = applyFilters(list, filters).filter((tutor) => matchesQuery(tutor, query));
-  return result.sort(comparators[sortBy] || comparators.recommended);
+  const result = applyFilters(list, filters)
+    .filter((tutor) => matchesQuery(tutor, query));
+
+  if (sortBy === 'recommended' || !comparators[sortBy]) {
+    const scores = new Map();
+
+    for (const tutor of result) {
+      scores.set(tutor.id, tutorScore(tutor));
+    }
+
+    return result.sort((a, b) =>
+      scores.get(b.id) - scores.get(a.id)
+    );
+  }
+
+  return result.sort(comparators[sortBy]);
 }
+
